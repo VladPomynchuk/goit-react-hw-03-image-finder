@@ -28,11 +28,16 @@ class ImageFinder extends Component {
 
     return toast.error('Please enter another request');
   };
+  loadingToggle = () => {
+    this.setState(({ loading }) => {
+      return { loading: !loading };
+    });
+  };
 
   fetchApi = async () => {
     const { request, page } = this.state;
 
-    this.setState({ loading: true });
+    await this.loadingToggle();
     if (request !== '') {
       const newImages = await getImages(request, page);
       if (Array.isArray(newImages)) {
@@ -40,11 +45,11 @@ class ImageFinder extends Component {
           return {
             images: [...images, ...newImages],
             page: (page += 1),
-            loading: false,
           };
         });
       }
     }
+    await this.loadingToggle();
   };
 
   render() {
