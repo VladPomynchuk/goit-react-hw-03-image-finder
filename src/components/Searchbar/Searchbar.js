@@ -26,13 +26,15 @@ const FormError = ({ name }) => {
 };
 
 const Searchbar = ({ onSubmit }) => {
-  const handleSubmit = ({ request }, { resetForm }) => {
+  const handleSubmit = ({ request }, actions) => {
     if (request.trim() === '') {
       return toast.error('Please, enter a request');
     }
+    // if (request.trim() === this.state.request) {
+    //   return toast.error('Please, enter another request');
+    // }
 
     onSubmit(request.trim());
-    resetForm();
   };
   return (
     <Header>

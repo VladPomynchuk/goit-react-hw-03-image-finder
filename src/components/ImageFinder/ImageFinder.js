@@ -2,7 +2,6 @@ import Searchbar from 'components/Searchbar';
 import { Component } from 'react';
 import ImageGallery from 'components/ImageGallery';
 import { getImages } from '../../service/api';
-import { toast } from 'react-toastify';
 import { StyledFinder, Spinner } from './ImageFinder.styled';
 import ButtonLoadMore from 'components/ButtonLoadMore';
 import { TailSpin } from 'react-loader-spinner';
@@ -13,54 +12,70 @@ class ImageFinder extends Component {
     images: [],
     page: 1,
     loading: false,
+    totalHits: 0,
   };
 
-  onSubmit = async value => {
-    if (value !== this.state.request) {
-      await this.setState({
-        request: value,
-        images: [],
-        page: 1,
-      });
-      await this.fetchApi();
-      return;
+  async componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.request !== this.state.request ||
+      prevState.page !== this.state.page
+    ) {
+      this.loadingToggle();
+      await getImages(
+        this.state.request,
+        this.state.page,
+        this.updateImages,
+        this.updateHits
+      );
+      this.loadingToggle();
     }
+  }
 
-    return toast.error('Please enter another request');
-  };
   loadingToggle = () => {
     this.setState(({ loading }) => {
       return { loading: !loading };
     });
   };
 
-  fetchApi = async () => {
-    const { request, page } = this.state;
-
-    await this.loadingToggle();
-    if (request !== '') {
-      const newImages = await getImages(request, page);
-      if (Array.isArray(newImages)) {
-        this.setState(({ images, page }) => {
-          return {
-            images: [...images, ...newImages],
-            page: (page += 1),
-          };
-        });
-      }
+  onSubmit = value => {
+    if (value !== this.state.request) {
+      this.setState({
+        request: value,
+        images: [],
+        page: 1,
+      });
     }
-    await this.loadingToggle();
+  };
+
+  updateImages = newImages => {
+    this.setState(({ images }) => {
+      return { images: [...images, ...newImages] };
+    });
+  };
+
+  incrementPage = () => {
+    this.setState(({ page }) => {
+      return { page: page + 1 };
+    });
+  };
+
+  updateHits = hits => {
+    if (hits !== this.state.totalHits) {
+      this.setState({ totalHits: hits });
+    }
   };
 
   render() {
-    const { images, loading } = this.state;
+    const { images, loading, totalHits } = this.state;
     return (
       <StyledFinder>
         <Searchbar onSubmit={this.onSubmit} />
         {images.length > 0 && (
           <>
             <ImageGallery images={images} />
-            {!loading && <ButtonLoadMore onClick={this.fetchApi} />}
+            {!loading && images.length !== totalHits && (
+              <ButtonLoadMore onClick={this.incrementPage} />
+            )}
           </>
         )}
         {loading && (
