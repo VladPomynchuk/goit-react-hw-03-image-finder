@@ -7,7 +7,7 @@ const ImageGalleryItem = ({ data, openModal }) => {
   };
 
   return (
-    <GalleryItem key={data.id} onClick={handleClick}>
+    <GalleryItem onClick={handleClick}>
       <img src={data.webformatURL} alt={data.tags} />
     </GalleryItem>
   );

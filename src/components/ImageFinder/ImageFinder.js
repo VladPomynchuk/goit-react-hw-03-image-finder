@@ -16,17 +16,10 @@ class ImageFinder extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.request !== this.state.request ||
-      prevState.page !== this.state.page
-    ) {
+    const { page, request } = this.state;
+    if (prevState.request !== request || prevState.page !== page) {
       this.loadingToggle();
-      await getImages(
-        this.state.request,
-        this.state.page,
-        this.updateImages,
-        this.updateHits
-      );
+      await getImages(request, page, this.updateImages, this.updateHits);
       this.loadingToggle();
     }
   }

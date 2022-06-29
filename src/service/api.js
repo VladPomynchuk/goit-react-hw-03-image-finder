@@ -24,7 +24,6 @@ export const getImages = async (request, page, updateImages, updateHits) => {
     const response = await fetchImages.data;
     const imagesArray = response.hits;
     const totalHits = response.totalHits;
-    console.log(totalHits);
 
     if (imagesArray.length === 0 || !Array.isArray(imagesArray)) {
       return toast.error(
