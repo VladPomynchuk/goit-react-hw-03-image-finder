@@ -13,7 +13,6 @@ class ImageFinder extends Component {
     images: [],
     page: 1,
     loading: false,
-    showModal: false,
   };
 
   onSubmit = async value => {
