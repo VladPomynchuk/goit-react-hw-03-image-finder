@@ -1,16 +1,15 @@
+import GlobalStyles from './GlobalStyle';
+import ImageFinder from './ImageFinder';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+
 export const App = () => {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
+    <>
+      <GlobalStyles />
+      <ImageFinder />
+      <ToastContainer theme="colored" />
+    </>
   );
 };
